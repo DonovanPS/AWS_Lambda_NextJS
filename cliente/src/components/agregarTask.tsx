@@ -5,6 +5,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { classNames } from 'primereact/utils';
+import router from 'next/router';
 
 type AgregarTask = {
     titulo: string;
@@ -46,7 +47,11 @@ const AgregarTask = ({ titulo }: AgregarTask) => {
     };
 
 
-  
+   const handleClick = () => {
+      console.log('The link was clicked.');
+      
+    router.reload();
+  };
 
 
 
@@ -91,7 +96,7 @@ const AgregarTask = ({ titulo }: AgregarTask) => {
 
     const dialogFooter = (
         <div className="flex justify-content-center">
-            <Button label="OK" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} />
+            <Button label="OK" className="p-button-text" autoFocus onClick={() => handleClick()} />
         </div>
     );
 
