@@ -1,0 +1,71 @@
+service: aws-lambda-crud-node
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-east-1:289904969868:table/TaskTable
+  httpApi:
+    cors:
+      allowedMethods: ["GET", "POST", "PUT", "DELETE"]
+      allowedHeaders: ["*"]
+      allowedOrigins: ["http://localhost:3000"]
+      allowCredentials: true
+
+functions:
+  api:
+    handler: src/index.handler
+    events:
+      - httpApi:
+          path: /
+          method: get
+  createTask:
+    handler: src/addTask.addTask
+    events:
+      - httpApi:
+          path: /tasks
+          method: post
+  getTasks:
+    handler: src/getTasks.getTasks
+    events:
+      - httpApi:
+          path: /tasks
+          method: get
+  getTask:
+    handler: src/getTask.getTask
+    events:
+      - httpApi:
+          path: /tasks/{id}
+          method: get
+  updateTask:
+    handler: src/updateTask.updateTask
+    events:
+      - httpApi:
+          path: /tasks/{id}
+          method: put
+  deleteTask:
+    handler: src/deleteTask.deleteTask
+    events:
+      - httpApi:
+          path: /tasks/{id}
+          method: delete
+          
+resources: 
+  Resources: 
+    UserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: TaskTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
